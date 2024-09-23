@@ -2,14 +2,14 @@ let buttoncontrol = document.getElementById('btn');
 let rulepage = document.getElementById('Rulepage');
 let closebutton = document.getElementById('cross');
 
-    buttoncontrol.addEventListener('click', function() {
-       rulepage.style.display = 'block';
-       closebutton.style.display = 'block';
+buttoncontrol.addEventListener('click', function() {
+    rulepage.style.display = 'block';
+    closebutton.style.display = 'block';
 });
 
-   closebutton.addEventListener('click', function() {
-      rulepage.style.display = 'none';
-      closebutton.style.display = 'none';
+closebutton.addEventListener('click', function() {
+    rulepage.style.display = 'none';
+    closebutton.style.display = 'none';
 });
 
 document.querySelector('.container').style.display = 'block';
@@ -38,53 +38,48 @@ function determineWinner(playerChoice, computerChoice) {
 
 function playGame(playerChoice) {
     const computerChoice = getComputerChoice();
-    const result = determineWinner(computerChoice, playerChoice);
+    const result = determineWinner(playerChoice, computerChoice);
 
-    // Update scores
+    // Retrieve scores from localStorage
     let computerScore = parseInt(localStorage.getItem('computerScore')) || 0;
     let playerScore = parseInt(localStorage.getItem('playerScore')) || 0;
+
+    // Update scores based on the result
+    if (result === 'You win!') {
+        playerScore++;
+    } else if (result === 'Computer wins!') {
+        computerScore++;
+    }
 
     // Save updated scores to localStorage
     localStorage.setItem('computerScore', computerScore);
     localStorage.setItem('playerScore', playerScore);
 
-    
-
-   // Update the UI
-    document.getElementById('player1').textContent = computerScore;
-    document.getElementById('player2').textContent = playerScore;
+    // Update the UI
+    document.getElementById('player1').textContent = playerScore;
+    document.getElementById('player2').textContent = computerScore;
     document.getElementById('zero1-2').textContent = computerScore;
     document.getElementById('zero2-2').textContent = playerScore;
 
-    // Initialize scores on page load
-    document.addEventListener('DOMContentLoaded', () => {
-    const playerScore = parseInt(localStorage.getItem('playerScore')) || 0;
-    const computerScore = parseInt(localStorage.getItem('computerScore')) || 0;
-    document.getElementById('player1').textContent = computerScore;
-    document.getElementById('player2').textContent = playerScore;
-    document.getElementById('zero1-2').textContent = computerScore;
-    document.getElementById('zero2-2').textContent = playerScore;
-    });
     // Remove previous winner class
     document.querySelectorAll('.user-selection').forEach(input => input.classList.remove('winner'));
 
     if (result === 'You win!') {
-        playerScore++;
         document.querySelector('.player-choice').classList.add('winner');
         document.getElementById('win-msg1').textContent = 'YOU WIN';
         document.getElementById('win-msg2').textContent = 'AGAINST PC';
     } else if (result === 'Computer wins!') {
-        computerScore++;
         document.querySelector('.computer-choice').classList.add('winner');
         document.getElementById('win-msg1').textContent = 'YOU LOST';
         document.getElementById('win-msg2').textContent = 'AGAINST PC';
     } else {
         document.getElementById('win-msg1').textContent = 'IT\'S A TIE';
-        document.getElementById('win-msg2').textContent = '';
+        document.getElementById('win-msg2').textContent = 'Press Play Again';
     }
-
-    document.querySelector('.text2 + h1').textContent = playerScore;
+    
     document.querySelector('.text1 + h1').textContent = computerScore;
+    document.querySelector('.text2 + h1').textContent = playerScore;
+    
 
     // Show second container and hide first container
     document.querySelector('.container').style.display = 'none';
@@ -94,6 +89,17 @@ function playGame(playerChoice) {
     document.querySelector('.player-choice').style.backgroundImage = `url(./${playerChoice}.png)`;
     document.querySelector('.computer-choice').style.backgroundImage = `url(./${computerChoice}.png)`;
 }
+
+// Initialize scores on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const playerScore = parseInt(localStorage.getItem('playerScore')) || 0;
+    const computerScore = parseInt(localStorage.getItem('computerScore')) || 0;
+    document.getElementById('player1').textContent = computerScore;
+    document.getElementById('player2').textContent = playerScore;
+    document.getElementById('zero1-2').textContent = computerScore;
+    document.getElementById('zero2-2').textContent = playerScore;
+});
+
 
 document.getElementById('btn').addEventListener('click', () => {
     document.getElementById('Rulepage').classList.toggle('hidden');
